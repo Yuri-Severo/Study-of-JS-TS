@@ -20,6 +20,7 @@ document.addEventListener('click', e => {
 
     if( el.classList.contains('delete')) {
         el.parentElement.remove();
+        saveTasks();
     }
 });
 
@@ -45,7 +46,26 @@ function createDeleteButton(li) {
     li.appendChild(deleteButton);
 }
 
-
 function saveTasks(){
-    
+    const liContent = tasks.querySelectorAll('li');
+    const taskList = [];
+
+    for (let task of liContent){
+        let taskText = task.innerText;
+        taskText = taskText.replace('Delete', '').trim();
+        taskList.push(taskText);
+    }
+
+    const tasksJSON = JSON.stringify(taskList);
+    localStorage.setItem('tasks', tasksJSON); 
 }
+
+function reloadTasks(){
+    const tasks = localStorage.getItem('tasks');
+    const taskList = JSON.parse(tasks);
+
+    for(let task of taskList){
+        createTask(task);
+    }
+}
+reloadTasks();
